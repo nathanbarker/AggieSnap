@@ -12,13 +12,13 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 		Description(Point(275,270),"It's features include adding and searching pictures."),
 		Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
 		
-		files_button(Point(x_max()-70,0),70,20,"Files",cb_files),
-		files_menu(Point(x_max()-70,20),70,20,Menu::vertical,"File"),
+		files_button(Point(0,0),70,20,"Files",cb_files),
+		files_menu(Point(0,20),70,20,Menu::vertical,"File"),
 		
-		search_box(Point(350,250),100,20,"Search:"),
-		search_button(Point(460,250),70,20, "Enter", cb_picture_search),
-		add_box(Point(350,250),100,20,"File & Location:"),
-		add_button(Point(460,250),70,20, "Enter", cb_picture_add)
+		search_box(Point(150,0),100,20,"Search:"),
+		search_button(Point(260,0),70,20, "Enter", cb_picture_search),
+		add_box(Point(150,0),100,20,"File & Location:"),
+		add_button(Point(260,0),70,20, "Enter", cb_picture_add)
 	{
 		files_menu.attach(new Button(Point(0,0),0,0,"Add Pic",cb_add));
 		files_menu.attach(new Button(Point(0,0),0,0,"Search",cb_search));

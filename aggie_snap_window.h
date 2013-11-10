@@ -28,12 +28,12 @@ struct aggie_snap_window : Graph_lib::Window {
 private:
 
 	
-	void hide_files() { files_menu.hide(); files_button.show(); } 
+	void hide_files() { files_menu.hide();} 
 	void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
 	void show_in_box() { attach(add_box); attach(add_button);}
 	void show_search_box() { attach(search_box); attach(search_button); }
-	void add_pressed() { detach(add_box); detach(add_button);}
-	void search_pressed() { detach(search_box); detach(search_button);}
+	void add_pressed() { detach(add_box); detach(add_button);  files_button.show(); }
+	void search_pressed() { detach(search_box); detach(search_button);  files_button.show(); }
 	
 	static void cb_add(Address, Address); // callback for add_picture
 	static void cb_search(Address, Address); // callback for search_picture
