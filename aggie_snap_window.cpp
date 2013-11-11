@@ -15,13 +15,18 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 		files_button(Point(0,0),70,20,"Files",cb_files),
 		files_menu(Point(0,20),70,20,Menu::vertical,"File"),
 		
-		search_box(Point(150,0),100,20,"Search:"),
-		search_button(Point(260,0),70,20, "Enter", cb_picture_search),
-		add_box(Point(150,0),100,20,"File & Location:"),
-		add_button(Point(260,0),70,20, "Enter", cb_picture_add)
+		search_box(Point(150,5),200,20,"Search:"),
+		search_button(Point(360,5),70,20, "Enter", cb_picture_search),
+		add_box(Point(150,5),200,20,"Location + File:"),
+		add_button(Point(360,5),70,20, "Enter", cb_picture_add),
+		add_url_image_box(Point(150,5),200,20,"URL + File:"),
+		add_url_image_button(Point(360,5),70,20, "Enter", cb_url_pressed)
+		
 	{
-		files_menu.attach(new Button(Point(0,0),0,0,"Add Pic",cb_add));
+		files_menu.attach(new Button(Point(0,0),0,0,"Local Add",cb_add));
+		files_menu.attach(new Button(Point(0,0),0,0,"Web Add",cb_url_input)); 
 		files_menu.attach(new Button(Point(0,0),0,0,"Search",cb_search));
+		
 		attach(files_menu);
 		attach(files_button);
 		files_menu.hide();
@@ -73,3 +78,16 @@ void aggie_snap_window::cb_picture_search(Address, Address pw)     // "the usual
 } 
 
 //------------------------------------------------------------------------------
+void aggie_snap_window::cb_url_input(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).url_input();
+} 
+
+//-------------------------------------------------------------------
+void aggie_snap_window::cb_url_pressed(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).url_pressed();
+} 
+
+//------------------------------------------------------------------------------
+
