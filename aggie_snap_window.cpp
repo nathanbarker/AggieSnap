@@ -1,4 +1,3 @@
-
 #include "aggie_snap_window.h"
 
 using namespace Graph_lib;
@@ -10,7 +9,7 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 		
 		Intro(Point(350,250),"This program is a photo library."),
 		Description(Point(275,270),"It's features include adding and searching pictures."),
-		Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
+		Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezequiel Cabezas."),
 		
 		files_button(Point(0,0),70,20,"Files",cb_files),
 		files_menu(Point(0,20),70,20,Menu::vertical,"File"),
