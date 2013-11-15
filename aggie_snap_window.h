@@ -6,7 +6,7 @@
 #include "Window.h"
 
 using namespace Graph_lib;
-using namespace stdl
+
 
 //------------------------------------------------------------------------------
 
@@ -30,8 +30,6 @@ private:
         
         In_box search_box;
         Button search_button;
-		
-		Out_box answer_out;
         
         void hide_files() { files_menu.hide();} 
         void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
@@ -52,7 +50,6 @@ private:
         static void cb_add(Address, Address);                                         // callback for add_picture
         static void cb_search(Address, Address);                                 // callback for search_picture
         static void cb_files(Address, Address);
-		static void cb_answer(Address, Address);
         static void cb_url_input(Address, Address);
         static void cb_url_pressed(Address, Address);
         static void cb_picture_search(Address, Address);
