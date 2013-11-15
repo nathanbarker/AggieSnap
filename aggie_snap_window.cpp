@@ -19,7 +19,6 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 add_box(Point(150,5),200,20,"Location + File:"),
                 add_button(Point(360,5),70,20, "Enter", cb_picture_add),
                 add_url_image_box(Point(150,5),200,20,"URL + File:"),
-				answer_out(Point(500,5),100,20,""),
                 add_url_image_button(Point(360,5),70,20, "Enter", cb_url_pressed)
                 
         {
