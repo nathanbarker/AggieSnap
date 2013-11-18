@@ -9,9 +9,11 @@ Point sp(100,100);
 
 aggie_snap_window win(sp,1000,600,"Aggie Snap"); 
                
-Image a(Point(800,0),"bannerfans_9425440 (3).jpg");
+Image a(Point(800,0),"Logo.jpg");
+
 
 win.attach(a);
+//win.attach(b);
 
 return gui_main();
 }

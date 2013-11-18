@@ -10,7 +10,9 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 Intro(Point(350,250),"This program is a photo library."),
                 Description(Point(275,270),"It's features include adding and searching pictures."),
                 Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
-                
+                Url_Error(Point(505,20),"Bad Input. Check the address and tags."),
+				Tag_Error(Point(505,70),"(only Family, Friends, Aggieland, Pets, Vacation)"),
+			
                 files_button(Point(0,0),70,20,"Files",cb_files),
                 files_menu(Point(0,20),70,20,Menu::vertical,"File"),
                 
@@ -18,9 +20,11 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
                 add_box(Point(150,5),200,20,"Location + File:"),
                 add_button(Point(360,5),70,20, "Enter", cb_picture_add),
-                add_url_image_box(Point(150,5),200,20,"URL + File:"),
-                add_url_image_button(Point(360,5),70,20, "Enter", cb_url_pressed)
-                
+                add_url_image_box(Point(150,5),350,20,"URL + File:"),
+                add_url_image_button(Point(355,30),70,20, "Add", cb_url_pressed),
+				close_web_add(Point(430,30),70,20, "Close", cb_close_url_add),
+				tag_box(Point(200,55),300,20, "Add Tags:"),
+                name_box(Point(200,30),150,20,"Name your picture:")
         {
                 files_menu.attach(new Button(Point(0,0),0,0,"Local Add",cb_add));
                 files_menu.attach(new Button(Point(0,0),0,0,"Web Add",cb_url_input)); 
@@ -36,6 +40,13 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 attach(Description);
                 Names.set_font_size(20);
                 attach(Names);
+				
+				
+				Url_Error.set_font_size(15);
+				Url_Error.set_color(Color::red);
+				
+				Tag_Error.set_font_size(15);
+				Tag_Error.set_color(Color::red);
                 
         }
 
@@ -88,12 +99,11 @@ void aggie_snap_window::cb_url_pressed(Address, Address pw)     // "the usual"
     reference_to<aggie_snap_window>(pw).url_pressed();
 } 
 
-//if ( prefix_string=="http://" && suffix_string==".jpg || suffix_string==".gif"))
-//{
-	//final_url= "wget"+my_url+"-O Aggie2.jpg";
-	//system(final_url.c_str());
-	//system("display Aggie.jpg")
-//}
-//else{
-// error handling
-//}
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_close_url_add(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).close_url_add();
+} 
+
+//------------------------------------------------------------------------------
