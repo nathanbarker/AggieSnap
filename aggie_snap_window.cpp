@@ -7,7 +7,9 @@ using namespace Graph_lib;
 aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title ) 
    :Window(xy,w,h,title),
                 
-                Intro(Point(350,250),"This program is a photo library."),
+                Start(Point(0,0),"Start.jpg"),
+				AggieSnap(Point(800,0),"Logo.jpg"),
+				Intro(Point(350,250),"This program is a photo library."),
                 Description(Point(275,270),"It's features include adding and searching pictures."),
                 Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
                 Url_Error(Point(505,20),"Bad Input. Check the address and tags."),
@@ -16,7 +18,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 files_button(Point(0,0),70,20,"Files",cb_files),
                 files_menu(Point(0,20),70,20,Menu::vertical,"File"),
                 
-                search_box(Point(150,5),200,20,"Search:"),
+                start_button(Point(0,0),1000,600,"Start ", cb_start_pressed),
+				search_box(Point(150,5),200,20,"Search:"),
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
                 add_box(Point(150,5),200,20,"Location + File:"),
                 add_button(Point(360,5),70,20, "Enter", cb_picture_add),
@@ -34,13 +37,15 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 attach(files_button);
                 files_menu.hide();
                 
+				
                 Intro.set_font_size(20);
                 attach(Intro);
                 Description.set_font_size(20);
                 attach(Description);
                 Names.set_font_size(20);
                 attach(Names);
-				
+				attach(start_button);
+				attach(Start);
 				
 				Url_Error.set_font_size(15);
 				Url_Error.set_color(Color::red);
@@ -104,6 +109,12 @@ void aggie_snap_window::cb_url_pressed(Address, Address pw)     // "the usual"
 void aggie_snap_window::cb_close_url_add(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).close_url_add();
+} 
+
+//------------------------------------------------------------------------------
+void aggie_snap_window::cb_start_pressed(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).start_pressed();
 } 
 
 //------------------------------------------------------------------------------
