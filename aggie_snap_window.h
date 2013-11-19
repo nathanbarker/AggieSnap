@@ -5,6 +5,7 @@
 #include "Graph.h"
 #include "Window.h"
 
+
 using namespace Graph_lib;
 
 
@@ -31,6 +32,7 @@ struct aggie_snap_window : Graph_lib::Window {
 private:
         In_box add_box;
         Button add_button;
+		Button close_add;
 		
 		Button start_button;
         
@@ -51,18 +53,12 @@ private:
         void hide_files() { files_menu.hide();} 
         void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
         
-		void show_in_box() { attach(add_box); attach(add_button);}
+		void show_in_box() { attach(add_box); attach(add_button); attach(name_box); attach(close_add); attach(tag_box);}
         void show_search_box() { attach(search_box); attach(search_button); }        
                      
         void search_pressed() {detach(search_box); detach(search_button); files_button.show();}                                //function that is called when the search BUTTON is pressed
-        void add_pressed() { detach(add_box); 																				   //function that is called when the add BUTTON is pressed
-							 detach(add_button);
-							 files_button.show();
-							 //string file = add_box.get_string();
-							 //ostringstream os;
-						     //os << file;
-							 //v.push_back(os.str());				
-							}                   
+        void add_pressed() { detach(Url_Error); detach(Tag_Error); redraw(); next_local(); }										 //function that is called when the add BUTTON is pressed						 																		                     
+		void add_close() { detach(add_box); detach(add_button); detach(name_box); detach(close_add); detach(tag_box); files_button.show();	}
 		void url_pressed() { detach(Url_Error); detach(Tag_Error); redraw(); next_url(); } 																//function that is called when the url add BUTTON is pressed
 		 
 		void show_url_input() { attach(add_url_image_box); attach(add_url_image_button); attach(name_box); attach(close_web_add); attach(tag_box); } 																				
@@ -71,7 +67,8 @@ private:
 	
 		static void cb_start_pressed(Address, Address);
         static void cb_add(Address, Address);                                         // callback for add_picture
-        static void cb_search(Address, Address);                                 // callback for search_picture
+        static void cb_add_close(Address, Address);
+		static void cb_search(Address, Address);                                 // callback for search_picture
         static void cb_files(Address, Address);
         static void cb_url_input(Address, Address);
         static void cb_url_pressed(Address, Address);
@@ -127,7 +124,7 @@ private:
 					&& check == true && v.size()<6)
 			
 				{
-					final_url= "wget -O Images/"+img_name+".jpg "+url;
+					final_url= "wget -O Images/"+img_name+ending_string+" "+url;
 				
 					system(final_url.c_str());
 				
@@ -171,7 +168,94 @@ private:
 			
 		}
 //-------------------------------------------------------------------------------------
-        
+    void next_local()
+	{
+		string img_name;
+		string location;
+		string final_location;
+		string bgning_string;
+		string ending_string;
+
+		location=add_box.get_string();
+		if(location != "")
+		{
+			bgning_string=location.substr(1,2)+" ";
+			ending_string=location.substr(location.size()-4,location.size()-1);
+	
+			img_name=name_box.get_string();
+
+			bool check = false;
+		
+			string tags;
+			tags=tag_box.get_string();
+			istringstream ss(tags);
+			string token;
+			v.clear();
+			while(getline(ss, token, ','))
+			{
+				v.push_back(token);
+			}				
+			for(int i = 0; i<v.size(); ++i)
+			{
+				check=false;
+				if(v[i]=="Family" || v[i]=="Friends" || v[i]=="Aggieland" || v[i]=="Pets" || v[i]=="Vacation")
+				{check=true;}
+			} 
+		
+			if((ending_string==".jpg" || 
+				ending_string==".gif" ||
+				ending_string==".JPG" ||
+				ending_string==".GIF" ||
+				ending_string==".jpeg"||			
+				ending_string==".JPEG" )
+				&& check == true && v.size()<6)
+		
+			{
+				final_location= "cp ~/"+location+" Images/"+img_name+ending_string;
+			
+				system(final_location.c_str());
+			
+				input.open("Library.txt");
+				string move;
+				transfer.clear();
+				while(getline(input, move))
+				{	
+					transfer.push_back(move);
+				}
+				input.close();	
+			
+				output.open ("Library.txt");
+			
+				for(int i=0; i<transfer.size(); ++i)
+				{
+					output<<transfer[i]<<endl;
+				}
+			
+				output<<"("+img_name+".jpg";			//Family, Friends, Aggieland, Pets, Vacation
+				for(int i=0; i<v.size(); ++i)
+				{
+					output<<","+v[i];
+				}
+				output<<")";
+				output.close();
+			}
+			else
+			{
+				attach(Url_Error);
+				attach(Tag_Error);
+				redraw();
+			}
+		
+		}
+		else
+		{
+			attach(Url_Error);
+			attach(Tag_Error);
+			redraw();
+		}
+				
+	}
+  
 };
 
 //------------------------------------------------------------------------------

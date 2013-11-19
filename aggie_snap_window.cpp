@@ -23,6 +23,7 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
                 add_box(Point(150,5),200,20,"Location + File:"),
                 add_button(Point(360,5),70,20, "Enter", cb_picture_add),
+				close_add(Point(435,5),70,20, "Close", cb_add_close),
                 add_url_image_box(Point(150,5),350,20,"URL + File:"),
                 add_url_image_button(Point(355,30),70,20, "Add", cb_url_pressed),
 				close_web_add(Point(430,30),70,20, "Close", cb_close_url_add),
@@ -79,6 +80,10 @@ void aggie_snap_window::cb_files(Address, Address pw)     // "the usual"
 } 
 
 //------------------------------------------------------------------------------
+void aggie_snap_window::cb_add_close(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).add_close();
+} 
 
 void aggie_snap_window::cb_picture_add(Address, Address pw)     // "the usual"
 {  
