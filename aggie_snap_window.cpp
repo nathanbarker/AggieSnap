@@ -14,6 +14,9 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
                 Url_Error(Point(505,20),"Bad Input. Check the address and tags."),
 				Tag_Error(Point(505,70),"(only Family, Friends, Aggieland, Pets, Vacation)"),
+				eg_tag(Point(505,70),"(e.g. Family, Friends, Aggieland, Pets, Vacation)"),
+				eg_url(Point(505,20),"(e.g. http://Aggielandrules.com/picture.jpg)"),
+				eg_local(Point(505,25),"(e.g. \\Pictures\\folder1\\Reveille.gif)"),
 			
                 files_button(Point(0,0),70,20,"Files",cb_files),
                 files_menu(Point(0,20),70,20,Menu::vertical,"File"),
@@ -21,9 +24,9 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 start_button(Point(0,0),1000,600,"Start ", cb_start_pressed),
 				search_box(Point(150,5),200,20,"Search:"),
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
-                add_box(Point(150,5),200,20,"Location + File:"),
-                add_button(Point(360,5),70,20, "Enter", cb_picture_add),
-				close_add(Point(435,5),70,20, "Close", cb_add_close),
+                add_box(Point(200,5),300,20,"Location + File:"),
+                add_button(Point(355,30),70,20, "Enter", cb_picture_add),
+				close_add(Point(430,30),70,20, "Close", cb_add_close),
                 add_url_image_box(Point(150,5),350,20,"URL + File:"),
                 add_url_image_button(Point(355,30),70,20, "Add", cb_url_pressed),
 				close_web_add(Point(430,30),70,20, "Close", cb_close_url_add),
@@ -54,6 +57,9 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				Tag_Error.set_font_size(15);
 				Tag_Error.set_color(Color::red);
                 
+				eg_tag.set_font_size(15);
+				eg_url.set_font_size(15);
+				eg_local.set_font_size(15);
         }
 
 
