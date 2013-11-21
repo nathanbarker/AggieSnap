@@ -13,8 +13,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 Description(Point(275,270),"It's features include adding and searching pictures."),
                 Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
                 Url_Error(Point(505,20),"Bad Input. Check the address, tags and there is a name."),
-				Tag_Error(Point(505,70),"(only Family, Friends, Aggieland, Pets, Vacation)"),
-				eg_tag(Point(505,70),"(e.g. Family, Friends, Aggieland, Pets, Vacation)"),
+				Tag_Error(Point(505,70),"(only Family Friends Aggieland Pets Vacation)"),
+				eg_tag(Point(505,70),"(e.g. Family Friends Aggieland Pets Vacation)"),
 				eg_url(Point(505,20),"(e.g. http://Aggielandrules.com/picture.jpg)"),
 				eg_local(Point(505,25),"(e.g. /Pictures/folder1/Reveille.gif)"),
 				
@@ -48,11 +48,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 
 				
                 Intro.set_font_size(20);
-                attach(Intro);
                 Description.set_font_size(20);
-                attach(Description);
                 Names.set_font_size(20);
-                attach(Names);
 				attach(start_button);
 				attach(Start);
 				

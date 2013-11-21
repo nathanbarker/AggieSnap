@@ -64,10 +64,10 @@ private:
 		Button next_button;
 		Button previous_button;
 		
-		void start_pressed() {detach(Start); detach(start_button); attach(AggieSnap);}   
+		void start_pressed() {detach(Start); detach(start_button); attach(AggieSnap); attach(Intro); attach(Description); attach(Names);}   
         void hide_files() { files_menu.hide();} 
         void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
-        void img_browse() { files_menu.hide(); browse(); attach(next_button);}
+        void img_browse() { files_menu.hide(); attach(previous_button); browse(); attach(next_button); }
 		
 		void show_in_box() { attach(add_box); attach(add_button); attach(name_box); attach(close_add); attach(tag_box); attach(eg_tag); attach(eg_local);}
         void show_search_box() { attach(search_box); attach(search_button); }        
@@ -317,7 +317,9 @@ private:
 			matrix.push_back(row);
 		}
 		browser.close();	
-
+		
+		previous_button.hide();
+		
 		display_img = new Image ( Point(100,100), "Images/"+matrix[0][0] );
 		attach(*display_img);
 		redraw();
@@ -326,11 +328,14 @@ private:
 	void next_image()
 	{
 		++count;
-		if(count == matrix.size())
+		if(count >= matrix.size()-1)
 		{
-			detach(next_button);
+			next_button.hide();
 		}
-		attach(previous_button);
+		if(count >= 0)
+		{
+			previous_button.show();
+		}
 		detach(*display_img);
 		display_img = new Image ( Point(100,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
@@ -341,9 +346,13 @@ private:
 	void previous_image()
 	{
 		--count;
-		if(count == 0)
+		if(count <= 0)
 		{
-			detach(previous_button);
+			previous_button.hide();
+		}
+		if(count <= matrix.size()-1)
+		{
+			next_button.show();
 		}
 		detach(*display_img);
 		display_img = new Image ( Point(100,100), "Images/"+matrix[count][0]);
