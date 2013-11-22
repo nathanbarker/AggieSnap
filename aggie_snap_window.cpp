@@ -17,7 +17,7 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				eg_tag(Point(505,70),"(e.g. Family Friends Aggieland Pets Vacation)"),
 				eg_url(Point(505,20),"(e.g. http://Aggielandrules.com/picture.jpg)"),
 				eg_local(Point(505,25),"(e.g. /Pictures/folder1/Reveille.gif)"),
-				
+				browser_error(Point(400,250),"No files in library"),
 				
                 files_button(Point(0,0),70,20,"Files",cb_files),
                 files_menu(Point(0,20),70,20,Menu::vertical,"File"),
@@ -35,7 +35,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				tag_box(Point(200,55),300,20, "Add Tags:"),
                 name_box(Point(200,30),150,20,"Name your picture:"),
 				next_button(Point(900,500),70,20, "Next", cb_next_image),
-				previous_button(Point(100,500),70,20, "Previous", cb_previous_image)
+				previous_button(Point(100,500),70,20, "Previous", cb_previous_image),
+				done(Point(450,25),70,20, "Done", cb_done)
         {
                 files_menu.attach(new Button(Point(0,0),0,0,"Local Add",cb_add));
                 files_menu.attach(new Button(Point(0,0),0,0,"Web Add",cb_url_input)); 
@@ -62,6 +63,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				eg_tag.set_font_size(15);
 				eg_url.set_font_size(15);
 				eg_local.set_font_size(15);
+				browser_error.set_font_size(25);
+				browser_error.set_color(Color::red);
         }
 
 
@@ -151,6 +154,13 @@ void aggie_snap_window::cb_next_image(Address, Address pw)     // "the usual"
 void aggie_snap_window::cb_previous_image(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).previous_image();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_done(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).done_browse();
 } 
 
 //------------------------------------------------------------------------------

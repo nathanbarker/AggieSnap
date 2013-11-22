@@ -25,6 +25,7 @@ struct aggie_snap_window : Graph_lib::Window {
 		Text eg_tag;
 		Text eg_url;
 		Text eg_local;
+		Text* tags_display;
 		
 		Text Url_Error;
 		Text Tag_Error;
@@ -38,7 +39,7 @@ struct aggie_snap_window : Graph_lib::Window {
 		
 		ifstream browser;
 		Image* display_img;
-	
+		Text browser_error;
         
 private:
         In_box add_box;
@@ -63,11 +64,13 @@ private:
 		
 		Button next_button;
 		Button previous_button;
+		Button done;
 		
 		void start_pressed() {detach(Start); detach(start_button); attach(AggieSnap); attach(Intro); attach(Description); attach(Names);}   
         void hide_files() { files_menu.hide();} 
         void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
-        void img_browse() { files_menu.hide(); attach(previous_button); browse(); attach(next_button); }
+        void img_browse() { files_menu.hide(); browse(); }
+		void done_browse() { files_menu.show(); detach(*display_img); detach(browser_error); detach(done); detach(previous_button);  detach(next_button); }
 		
 		void show_in_box() { attach(add_box); attach(add_button); attach(name_box); attach(close_add); attach(tag_box); attach(eg_tag); attach(eg_local);}
         void show_search_box() { attach(search_box); attach(search_button); }        
@@ -95,6 +98,7 @@ private:
 		static void cb_close_url_add(Address, Address); 
         static void cb_next_image(Address, Address);
 		static void cb_previous_image(Address, Address);
+		static void cb_done(Address, Address);
 		
         void add(){ hide_files(); show_in_box();}
         void search(){ hide_files(); show_search_box();}
@@ -139,7 +143,11 @@ private:
 				ending_string==".JPG" ||
 				ending_string==".GIF" ||
 				ending_string==".jpeg"||			
-				ending_string==".JPEG" )
+				ending_string==".JPEG"||
+				ending_string==".bmp" ||
+				ending_string==".BMP" ||
+				ending_string==".png" ||
+				ending_string==".PNG" )
 				&& check == true && v.size()<6)
 		
 			{
@@ -227,7 +235,12 @@ private:
 				ending_string==".JPG" ||
 				ending_string==".GIF" ||
 				ending_string==".jpeg"||			
-				ending_string==".JPEG" )
+				ending_string==".JPEG"||
+				ending_string==".bmp" ||
+				ending_string==".BMP" ||
+				ending_string==".png" ||
+				ending_string==".PNG" 
+				)
 				&& check == true && v.size()<6)
 			{
 				final_location= "cp ~/"+location+" Images/"+img_name+ending_string;
@@ -289,40 +302,59 @@ private:
 		matrix.clear();
 		string token,tag1, tag2, tag3, tag4, tag5;
 		browser.open("Library.txt");
-
-		while(browser>>token>>tag1>>tag2>>tag3>>tag4>>tag5)
-		{	
-			vector <string> row;
-			row.push_back(token);
-			if (tag1 != "x")
-			{
-				row.push_back(tag1);
-			}
-			if (tag2 != "x")
-			{
-				row.push_back(tag2);
-			}
-			if (tag3 != "x")
-			{
-				row.push_back(tag3);
-			}
-			if (tag4 != "x")
-			{
-				row.push_back(tag4);
-			}
-			if (tag5 != "x")
-			{
-				row.push_back(tag5);
-			}
-			matrix.push_back(row);
+		string test;
+		attach(done);
+		
+		getline(browser, test);
+		if(test == "")
+		{
+			attach(browser_error);
+			redraw();
 		}
-		browser.close();	
+		else
+		{
+			attach(previous_button);  
+			attach(next_button); 
+			while(browser>>token>>tag1>>tag2>>tag3>>tag4>>tag5)
+			{	
+				vector <string> row;
+				row.push_back(token);
+				if (tag1 != "x")
+				{
+					row.push_back(tag1);
+				}
+				if (tag2 != "x")
+				{
+					row.push_back(tag2);
+				}
+				if (tag3 != "x")
+				{
+					row.push_back(tag3);
+				}
+				if (tag4 != "x")
+				{
+					row.push_back(tag4);
+				}
+				if (tag5 != "x")
+				{
+					row.push_back(tag5);
+				}
+				matrix.push_back(row);
+			}
+			browser.close();	
+			
+			previous_button.hide();
+			
+			display_img = new Image ( Point(180,100), "Images/"+matrix[0][0] );
 		
-		previous_button.hide();
-		
-		display_img = new Image ( Point(100,100), "Images/"+matrix[0][0] );
-		attach(*display_img);
-		redraw();
+			
+		/*	tags_display = new Text ( Point(350,75), "Tags: "+matrix[0][1]);
+			tags_display->set_font_size(15);
+			attach(*tags_display);
+		*/
+			attach(*display_img);
+			redraw();
+		}
 	}	
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------	
 	void next_image()
@@ -337,7 +369,7 @@ private:
 			previous_button.show();
 		}
 		detach(*display_img);
-		display_img = new Image ( Point(100,100), "Images/"+matrix[count][0]);
+		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
 		redraw();
 	}
@@ -355,7 +387,7 @@ private:
 			next_button.show();
 		}
 		detach(*display_img);
-		display_img = new Image ( Point(100,100), "Images/"+matrix[count][0]);
+		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
 		redraw();
 	}

@@ -11,6 +11,8 @@
 
 #include <FL/Fl_GIF_Image.H>
 #include <FL/Fl_JPEG_Image.H>
+#include <FL/Fl_PNG_Image.H>
+#include <FL/Fl_BMP_Image.H>
 #include "Graph.h"
 #include <cstring>
 
@@ -410,6 +412,8 @@ Suffix::Encoding get_encoding(const string& s)
         {".jpg",  Suffix::jpg},
         {".jpeg", Suffix::jpg},
         {".gif",  Suffix::gif},
+		{".png",  Suffix::png},
+		{".bmp",  Suffix::bmp},
     };
 
     for (int i = 0, n = ARRAY_SIZE(smap); i < n; i++)
@@ -446,6 +450,12 @@ Image::Image(Point xy, string s, Suffix::Encoding e)
         break;
     case Suffix::gif:
         p = new Fl_GIF_Image(s.c_str());
+        break;
+	case Suffix::png:
+        p = new Fl_PNG_Image(s.c_str());
+        break;
+	case Suffix::bmp:
+        p = new Fl_BMP_Image(s.c_str());
         break;
     default:    // Unsupported image encoding
         fn.set_label("unsupported file type \""+s+'\"');
