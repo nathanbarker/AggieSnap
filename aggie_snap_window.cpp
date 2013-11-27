@@ -38,6 +38,7 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				next_button(Point(900,500),70,20, "Next", cb_next_image),
 				previous_button(Point(100,500),70,20, "Previous", cb_previous_image),
 				done(Point(450,25),70,20, "Back", cb_done),
+				back_error(Point(450,25),70,20, "Back", cb_error_search),
 				back_search(Point(450,25),70,20, "Back", cb_done_search),
 				next_search(Point(900,500),70,20, "Next", cb_next_search),
 				previous_search(Point(100,500),70,20, "Previous", cb_previous_search)
@@ -174,6 +175,13 @@ void aggie_snap_window::cb_done(Address, Address pw)     // "the usual"
 void aggie_snap_window::cb_done_search(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).done_search();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_error_search(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).error_search();
 } 
 
 //------------------------------------------------------------------------------

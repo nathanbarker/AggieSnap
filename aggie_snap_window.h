@@ -53,8 +53,10 @@ private:
         In_box search_box;
         Button search_button;
 		Button back_search;
+		Button back_error;
 		Button next_search;
 		Button previous_search;
+		 
 		
 		In_box name_box;
 		Button close_web_add;
@@ -78,16 +80,16 @@ private:
 		
 		void show_in_box() { attach(add_box); attach(add_button); attach(name_box); attach(close_add); attach(tag_box); attach(eg_tag); attach(eg_local);}
         void show_search_box() { attach(search_box); attach(search_button); }        
-		void done_search() { files_menu.show(); detach(search_error); detach(back_search); detach(*display_img); detach(*tags_display); detach(previous_search); detach(next_search);}
-		  
-        void search_pressed() {detach(search_box); detach(search_button); search_tags(); attach(back_search); }                                //function that is called when the search BUTTON is pressed
+		void done_search() { files_menu.show(); detach(back_search); detach(*display_img); detach(*tags_display); detach(previous_search); detach(next_search);}
+		void error_search() { files_menu.show(); detach(search_error); detach(back_error);}
+		
+        void search_pressed() {detach(search_box); detach(search_button); attach(back_error); search_tags(); }                                //function that is called when the search BUTTON is pressed
         void add_pressed() { detach(eg_tag); detach(eg_local); detach(Url_Error); detach(Tag_Error); redraw(); next_local(); }										 //function that is called when the add BUTTON is pressed						 																		                     
 		void add_close() { detach(eg_tag); detach(eg_local); detach(Url_Error); detach(Tag_Error); detach(add_box); detach(add_button); detach(name_box); detach(close_add); detach(tag_box); files_button.show();	}
 		void url_pressed() { detach(eg_tag); detach(eg_url);detach(Url_Error); detach(Tag_Error); redraw(); next_url();  } 																//function that is called when the url add BUTTON is pressed
 		 
 		void show_url_input() { attach(add_url_image_box); attach(add_url_image_button); attach(name_box); attach(close_web_add); attach(tag_box); attach(eg_tag); attach(eg_url); } 																				
 		void close_url_add() { files_button.show(); detach(add_url_image_box); detach(add_url_image_button); detach(name_box); detach(close_web_add); detach(tag_box); detach(Url_Error); detach(Tag_Error); detach(eg_tag); detach(eg_url); redraw();}
-		
 		
 	
 		static void cb_browse(Address, Address);
@@ -107,6 +109,7 @@ private:
 		static void cb_done_search(Address, Address);
 		static void cb_next_search(Address, Address);
 		static void cb_previous_search(Address, Address);
+		static void cb_error_search(Address, Address);
 		
         void add(){ hide_files(); show_in_box();}
         void search(){ hide_files(); show_search_box();}
@@ -418,7 +421,7 @@ private:
 		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
 		
-		for(int i =1; i<matrix[0].size(); ++i)
+		for(int i = 1; i < matrix[count].size(); ++i)
 			{
 				tag_show = tag_show + matrix[count][i]+ ", ";
 			}
@@ -446,6 +449,8 @@ private:
 		
 		if(search != "")
 		{
+			attach(back_search);
+			detach(back_error);
 			while(ss>>token)
 			{
 				if(token == "Family" || token == "Friends" || token =="Vacation" || token =="Aggieland" || token =="Pets" && tags_searched.size() <=5)
