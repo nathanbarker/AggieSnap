@@ -25,6 +25,7 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 
                 start_button(Point(0,0),1000,600,"Start ", cb_start_pressed),
 				search_box(Point(150,5),200,20,"Search:"),
+				search_error(Point(400,250),"Bad Tag Search"),
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
                 add_box(Point(200,5),300,20,"Location + File:"),
                 add_button(Point(355,30),70,20, "Enter", cb_picture_add),
@@ -36,7 +37,10 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 name_box(Point(200,30),150,20,"Name your picture:"),
 				next_button(Point(900,500),70,20, "Next", cb_next_image),
 				previous_button(Point(100,500),70,20, "Previous", cb_previous_image),
-				done(Point(450,25),70,20, "Done", cb_done)
+				done(Point(450,25),70,20, "Back", cb_done),
+				back_search(Point(450,25),70,20, "Back", cb_done_search),
+				next_search(Point(900,500),70,20, "Next", cb_next_search),
+				previous_search(Point(100,500),70,20, "Previous", cb_previous_search)
         {
                 files_menu.attach(new Button(Point(0,0),0,0,"Local Add",cb_add));
                 files_menu.attach(new Button(Point(0,0),0,0,"Web Add",cb_url_input)); 
@@ -60,6 +64,8 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				Tag_Error.set_font_size(15);
 				Tag_Error.set_color(Color::red);
                 
+				search_error.set_font_size(25);
+				search_error.set_color(Color::red);
 				eg_tag.set_font_size(15);
 				eg_url.set_font_size(15);
 				eg_local.set_font_size(15);
@@ -161,6 +167,27 @@ void aggie_snap_window::cb_previous_image(Address, Address pw)     // "the usual
 void aggie_snap_window::cb_done(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).done_browse();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_done_search(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).done_search();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_next_search(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).next_search_img();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_previous_search(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).previous_search_img();
 } 
 
 //------------------------------------------------------------------------------

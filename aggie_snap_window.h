@@ -25,6 +25,7 @@ struct aggie_snap_window : Graph_lib::Window {
 		Text eg_tag;
 		Text eg_url;
 		Text eg_local;
+		Text search_error;
 		Text* tags_display;
 		
 		Text Url_Error;
@@ -34,8 +35,6 @@ struct aggie_snap_window : Graph_lib::Window {
         ifstream input;
 		
 		int count = 0;
-		ofstream count_add;
-		ifstream count_in;
 		
 		ifstream browser;
 		Image* display_img;
@@ -53,14 +52,19 @@ private:
         
         In_box search_box;
         Button search_button;
+		Button back_search;
+		Button next_search;
+		Button previous_search;
 		
 		In_box name_box;
 		Button close_web_add;
 		In_box tag_box;
 		
 		Vector< Vector<string> > matrix;
+		Vector< Vector<string> > search_matrix;
 		Vector <string> v;
         Vector <string> transfer;
+		vector <int> matches;
 		
 		Button next_button;
 		Button previous_button;
@@ -70,12 +74,13 @@ private:
         void hide_files() { files_menu.hide();} 
         void files_pressed() { files_button.hide(); files_menu.show(); detach(Intro); detach(Description); detach(Names);}
         void img_browse() { files_menu.hide(); browse(); }
-		void done_browse() { files_menu.show(); detach(*display_img); detach(browser_error); detach(done); detach(previous_button);  detach(next_button); }
+		void done_browse() { files_menu.show(); detach(*display_img); detach(browser_error); detach(done); detach(previous_button); detach(next_button); detach(*tags_display);}
 		
 		void show_in_box() { attach(add_box); attach(add_button); attach(name_box); attach(close_add); attach(tag_box); attach(eg_tag); attach(eg_local);}
         void show_search_box() { attach(search_box); attach(search_button); }        
-                     
-        void search_pressed() {detach(search_box); detach(search_button); files_button.show();}                                //function that is called when the search BUTTON is pressed
+		void done_search() { files_menu.show(); detach(search_error); detach(back_search); detach(*display_img); detach(*tags_display); detach(previous_search); detach(next_search);}
+		  
+        void search_pressed() {detach(search_box); detach(search_button); search_tags(); attach(back_search); }                                //function that is called when the search BUTTON is pressed
         void add_pressed() { detach(eg_tag); detach(eg_local); detach(Url_Error); detach(Tag_Error); redraw(); next_local(); }										 //function that is called when the add BUTTON is pressed						 																		                     
 		void add_close() { detach(eg_tag); detach(eg_local); detach(Url_Error); detach(Tag_Error); detach(add_box); detach(add_button); detach(name_box); detach(close_add); detach(tag_box); files_button.show();	}
 		void url_pressed() { detach(eg_tag); detach(eg_url);detach(Url_Error); detach(Tag_Error); redraw(); next_url();  } 																//function that is called when the url add BUTTON is pressed
@@ -99,6 +104,9 @@ private:
         static void cb_next_image(Address, Address);
 		static void cb_previous_image(Address, Address);
 		static void cb_done(Address, Address);
+		static void cb_done_search(Address, Address);
+		static void cb_next_search(Address, Address);
+		static void cb_previous_search(Address, Address);
 		
         void add(){ hide_files(); show_in_box();}
         void search(){ hide_files(); show_search_box();}
@@ -303,6 +311,7 @@ private:
 		string token,tag1, tag2, tag3, tag4, tag5;
 		browser.open("Library.txt");
 		string test;
+		string tag_show ="";
 		attach(done);
 		
 		getline(browser, test);
@@ -315,8 +324,10 @@ private:
 		{
 			attach(previous_button);  
 			attach(next_button); 
-			while(browser>>token>>tag1>>tag2>>tag3>>tag4>>tag5)
-			{	
+			istringstream ss(test);
+			ss>>token>>tag1>>tag2>>tag3>>tag4>>tag5;
+			do
+			{
 				vector <string> row;
 				row.push_back(token);
 				if (tag1 != "x")
@@ -340,18 +351,21 @@ private:
 					row.push_back(tag5);
 				}
 				matrix.push_back(row);
-			}
+			}while(browser>>token>>tag1>>tag2>>tag3>>tag4>>tag5);
 			browser.close();	
 			
 			previous_button.hide();
 			
 			display_img = new Image ( Point(180,100), "Images/"+matrix[0][0] );
 		
-			
-		/*	tags_display = new Text ( Point(350,75), "Tags: "+matrix[0][1]);
+			for(int i =1; i<matrix[0].size(); ++i)
+				{
+					tag_show = tag_show + matrix[count][i]+ ", ";
+				}
+			tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
 			tags_display->set_font_size(15);
 			attach(*tags_display);
-		*/
+		
 			attach(*display_img);
 			redraw();
 		}
@@ -359,6 +373,8 @@ private:
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------	
 	void next_image()
 	{
+		string tag_show;
+		detach(*tags_display);
 		++count;
 		if(count >= matrix.size()-1)
 		{
@@ -371,12 +387,24 @@ private:
 		detach(*display_img);
 		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
+		
+		for(int i =1; i<matrix[count].size(); ++i)
+			{
+				tag_show = tag_show + matrix[count][i]+ ", ";
+			}
+		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+		tags_display->set_font_size(15);
+		attach(*tags_display);
+		
+		
 		redraw();
 	}
 	
 //-----------------------------------------------------------------------------------------------------
 	void previous_image()
 	{
+		string tag_show = "";
+		detach(*tags_display);
 		--count;
 		if(count <= 0)
 		{
@@ -389,10 +417,178 @@ private:
 		detach(*display_img);
 		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
 		attach(*display_img);
+		
+		for(int i =1; i<matrix[0].size(); ++i)
+			{
+				tag_show = tag_show + matrix[count][i]+ ", ";
+			}
+		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+		tags_display->set_font_size(15);
+		attach(*tags_display);
+		
 		redraw();
 	}
 
-//-----------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------	
+	
+	void search_tags()
+	{
+		string search;
+		vector <string> tags_searched;
+		search=search_box.get_string();
+		istringstream ss(search);
+		string token = "";
+		matches.clear();
+		search_matrix.clear();
+		tags_searched.clear();
+		string add = "";
+		count = 0;
+		
+		if(search != "")
+		{
+			while(ss>>token)
+			{
+				if(token == "Family" || token == "Friends" || token =="Vacation" || token =="Aggieland" || token =="Pets" && tags_searched.size() <=5)
+					{
+					tags_searched.push_back(token);
+					}
+				if( tags_searched.size() > 0 )
+					{
+						
+						count = 0;
+						string file,tag1, tag2, tag3, tag4, tag5;
+						browser.open("Library.txt");
+						string test;
+						string tag_show ="";
+						
+						getline(browser, test);
+						if(test == "")
+						{
+							attach(search_error);
+							redraw();
+							browser.close();
+						}
+						else
+						{
+							istringstream ss(test);
+							ss>>file>>tag1>>tag2>>tag3>>tag4>>tag5;
+							do
+							{	
+								vector <string> row;
+								row.push_back(file);
+								row.push_back(tag1);					
+								row.push_back(tag2);						
+								row.push_back(tag3);														
+								row.push_back(tag4);										
+								row.push_back(tag5);	
+								search_matrix.push_back(row);
+							}while(browser>>file>>tag1>>tag2>>tag3>>tag4>>tag5);
+							for(int ii = 0; ii<search_matrix.size(); ++ii)
+							{
+								for(int i = 0; i<tags_searched.size(); ++i)
+								{
+									if(search_matrix[ii][1] == tags_searched[i] || 
+										search_matrix[ii][2] == tags_searched[i] ||
+										search_matrix[ii][3] == tags_searched[i] ||
+										search_matrix[ii][4] == tags_searched[i] ||
+										search_matrix[ii][5] == tags_searched[i] )
+									{
+										matches.push_back(ii);
+									}
+								}
+							}	
+								browser.close();
+								attach(previous_search);
+								previous_search.hide();
+								attach(next_search);
+								display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[0]][0] );
+								for(int i =1; i<search_matrix[matches[0]].size(); ++i)
+									{
+										if(search_matrix[matches[0]][i] != "x")
+										{
+										tag_show = tag_show + search_matrix[matches[0]][i]+ ", ";
+										}
+									}
+								tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+								tags_display->set_font_size(15);
+								attach(*tags_display);
+							
+								attach(*display_img);
+								redraw();
+						}
+					}
+				else
+					{
+						attach(search_error);
+					}
+			}
+		}
+		else
+			{
+				attach(search_error);
+			}	
+	}			
 
+	
+//-----------------------------------------------------------------------------------------------------
+void next_search_img()
+	{
+		string tag_show;
+		detach(*tags_display);
+		++count;
+		if(count >= matches.size()-1)
+		{
+			next_search.hide();
+		}
+		if(count >= 0)
+		{
+			previous_search.show();
+		}
+		detach(*display_img);
+		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);
+		attach(*display_img);
+		for(int i =1; i<search_matrix[count].size(); ++i)
+			{
+				if(search_matrix[matches[count]][i] != "x")
+				{
+				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";
+				}
+			}
+		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+		tags_display->set_font_size(15);
+		attach(*tags_display);
+		redraw();
+	}	
+//-----------------------------------------------------------------------------------------------------	
+
+void previous_search_img()
+{
+		string tag_show;
+		detach(*tags_display);
+		--count;
+		if(count <= matches.size()-1)
+		{
+			next_search.show();
+		}
+		if(count <= 0)
+		{
+			previous_search.hide();
+		}
+		detach(*display_img);
+		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);
+		attach(*display_img);
+		for(int i =1; i<search_matrix[count].size(); ++i)
+			{
+				if(search_matrix[matches[count]][i] != "x")
+				{
+				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";
+				}
+			}
+		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+		tags_display->set_font_size(15);
+		attach(*tags_display);
+		redraw();
+}
+//-----------------------------------------------------------------------------------------------------
 };
 #endif // AGGIE_WINDOW_GUARD
