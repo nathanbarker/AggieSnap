@@ -180,10 +180,11 @@ private:
 				input.close();	
 			
 				output.open ("Library.txt");
-			
-				for(auto i=0; i<transfer.size(); ++i)
+				int c = 0;
+				for(auto i : transfer)
 				{
-					output<<transfer[i]<<endl;
+					output<<transfer[c]<<endl;
+					++c;
 				}
 			
 				output<<img_name+ending_string;			
