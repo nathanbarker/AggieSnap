@@ -7,13 +7,9 @@ using namespace Graph_lib;
 aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title ) 
    :Window(xy,w,h,title),
                 
-                Start(Point(0,0),"Start.jpg"),
-				AggieSnap(Point(800,0),"Logo.jpg"),
-				Intro(Point(350,250),"This program is a photo library."),
-                Description(Point(275,270),"It's features include adding and searching pictures."),
-                Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
                 Url_Error(Point(505,20),"Bad Input. Check the address, tags and there is a name."),
-				Tag_Error(Point(505,70),"(only Family Friends Aggieland Pets Vacation)"),
+				Tag_Error(Point(505,70),"(only Family Friends Aggieland Pets Vacation. Separated by spaces.)"),
+				Tag_Remove_Error(Point(505,70),"(Bad Tag was removed)"),
 				eg_tag(Point(505,70),"(e.g. Family Friends Aggieland Pets Vacation)"),
 				eg_url(Point(505,20),"(e.g. http://Aggielandrules.com/picture.jpg)"),
 				eg_local(Point(505,25),"(e.g. /Pictures/folder1/Reveille.gif)"),
@@ -22,8 +18,6 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
                 files_button(Point(0,0),70,20,"Files",cb_files),
                 files_menu(Point(0,20),70,20,Menu::vertical,"File"),
 				
-                
-                start_button(Point(0,0),1000,600,"Start ", cb_start_pressed),
 				search_box(Point(150,5),200,20,"Search:"),
 				search_error(Point(400,250),"Bad Tag Search"),
                 search_button(Point(360,5),70,20, "Enter", cb_picture_search),
@@ -38,33 +32,26 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				next_button(Point(900,500),70,20, "Next", cb_next_image),
 				previous_button(Point(100,500),70,20, "Previous", cb_previous_image),
 				done(Point(450,25),70,20, "Back", cb_done),
+				done_error(Point(450,25),70,20, "Back", cb_done_error),
 				back_error(Point(450,25),70,20, "Back", cb_error_search),
 				back_search(Point(450,25),70,20, "Back", cb_done_search),
-				next_search(Point(900,500),70,20, "Next", cb_next_search),
-				previous_search(Point(100,500),70,20, "Previous", cb_previous_search)
+				previous_search(Point(100,500),70,20, "Previous", cb_previous_search),
+				next_search(Point(900,500),70,20, "Next", cb_next_search)
+				
         {
                 files_menu.attach(new Button(Point(0,0),0,0,"Local Add",cb_add));
                 files_menu.attach(new Button(Point(0,0),0,0,"Web Add",cb_url_input)); 
                 files_menu.attach(new Button(Point(0,0),0,0,"Search",cb_search));
                 files_menu.attach(new Button(Point(0,0),0,0,"Browse",cb_browse));
 				
-                attach(files_menu);
-                attach(files_button);
-                files_menu.hide();
-                
-				
-                Intro.set_font_size(20);
-                Description.set_font_size(20);
-                Names.set_font_size(20);
-				attach(start_button);
-				attach(Start);
-				
 				Url_Error.set_font_size(15);
 				Url_Error.set_color(Color::red);
 				
 				Tag_Error.set_font_size(15);
 				Tag_Error.set_color(Color::red);
-                
+                Tag_Remove_Error.set_font_size(15);
+				Tag_Remove_Error.set_color(Color::red);
+				
 				search_error.set_font_size(25);
 				search_error.set_color(Color::red);
 				eg_tag.set_font_size(15);
@@ -72,6 +59,12 @@ aggie_snap_window::aggie_snap_window(Point xy, int w, int h, const string& title
 				eg_local.set_font_size(15);
 				browser_error.set_font_size(25);
 				browser_error.set_color(Color::red);
+				
+				attach(files_menu);
+                attach(files_button);
+                files_menu.hide();
+				
+				
         }
 
 
@@ -105,7 +98,7 @@ void aggie_snap_window::cb_add_close(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).add_close();
 } 
-
+//------------------------------------------------------------------------------
 void aggie_snap_window::cb_picture_add(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).add_pressed();
@@ -138,12 +131,6 @@ void aggie_snap_window::cb_close_url_add(Address, Address pw)     // "the usual"
 } 
 
 //------------------------------------------------------------------------------
-void aggie_snap_window::cb_start_pressed(Address, Address pw)     // "the usual"
-{  
-    reference_to<aggie_snap_window>(pw).start_pressed();
-} 
-
-//------------------------------------------------------------------------------
 void aggie_snap_window::cb_browse(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).img_browse();
@@ -168,6 +155,13 @@ void aggie_snap_window::cb_previous_image(Address, Address pw)     // "the usual
 void aggie_snap_window::cb_done(Address, Address pw)     // "the usual"
 {  
     reference_to<aggie_snap_window>(pw).done_browse();
+} 
+
+//------------------------------------------------------------------------------
+
+void aggie_snap_window::cb_done_error(Address, Address pw)     // "the usual"
+{  
+    reference_to<aggie_snap_window>(pw).done_browse_error();
 } 
 
 //------------------------------------------------------------------------------

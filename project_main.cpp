@@ -1,13 +1,16 @@
 #include "std_lib_facilities_3.h"
 #include "aggie_snap_window.h"
+#include "aggie_intro.h"
 #include "Graph.h"
+
 
 int main()
 try{
 
 Point sp(100,100);
+aggie_snap_window win(Point(100,100),1000,600,"Aggie Snap");
+aggie_intro intro(sp,1000,600,"Aggie Snap"); 
 
-aggie_snap_window win(sp,1000,600,"Aggie Snap"); 
                
 
 return gui_main();
