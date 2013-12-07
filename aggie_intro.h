@@ -6,30 +6,25 @@
 #include "Window.h"
 #include "aggie_snap_window.h"
 
-
 using namespace Graph_lib;
 
-struct aggie_intro : Graph_lib::Window {
+struct aggie_intro : Graph_lib::Window {								//intro slash description window
     aggie_intro(Point xy, int w, int h, const string& title );
 	
 		Image Start;
         Image AggieSnap;
-		Text Intro;
+		Text Intro;							//Image and text objects
         Text Description;
         Text Names;
 	
 	private:
 	
-	Button start_button;
-	Button continue_button;
+	Button start_button;						//button to pass intro 
+	Button continue_button;						//close intro window 
         
-	void continue_pressed() { hide();  }
-	void start_pressed() {detach(Start); detach(start_button); attach(AggieSnap); attach(continue_button); attach(Intro); attach(Description); attach(Names);}   
+	void continue_pressed() { hide();  }				//functions for continue button
+	void start_pressed() {detach(Start); detach(start_button); attach(AggieSnap); attach(continue_button); attach(Intro); attach(Description); attach(Names);}     //function for intro button
 	static void cb_start_pressed(Address, Address);
-	static void cb_continue_pressed(Address, Address);
-	
-	
-	
-	
+	static void cb_continue_pressed(Address, Address);	
 };
 #endif // AGGIE_WINDOW_GUARD

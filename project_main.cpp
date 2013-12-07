@@ -3,15 +3,12 @@
 #include "aggie_intro.h"
 #include "Graph.h"
 
-
 int main()
 try{
 
 Point sp(100,100);
-aggie_snap_window win(Point(100,100),1000,600,"Aggie Snap");
-aggie_intro intro(sp,1000,600,"Aggie Snap"); 
-
-               
+aggie_snap_window win(Point(100,100),1000,600,"Aggie Snap");			//creating aggie snap window
+aggie_intro intro(sp,1000,600,"Aggie Snap"); 							//creating intro window
 
 return gui_main();
 }

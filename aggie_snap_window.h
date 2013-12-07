@@ -1,20 +1,16 @@
 #ifndef AGGIE_WINDOW_GUARD
 #define AGGIE_WINDOW_GUARD 1
-
 #include "GUI.h"    // for Simple_window only (doesn't really belong in Window.h)
 #include "Graph.h"
 #include "Window.h"
-
-
 using namespace Graph_lib;
-
 
 //------------------------------------------------------------------------------
 
-struct aggie_snap_window : Graph_lib::Window {
+struct aggie_snap_window : Graph_lib::Window {								//program class
     aggie_snap_window(Point xy, int w, int h, const string& title );
         
-        Menu files_menu;
+        Menu files_menu;											//drop down menu
 		Button files_button;
         
 		Text eg_tag;
@@ -27,13 +23,13 @@ struct aggie_snap_window : Graph_lib::Window {
 		Text Tag_Remove_Error;
 		Text Tag_Error;
 		
-		ofstream output;
+		ofstream output;											//input and output stream for writing and reading index file
         ifstream input;
 		
 		int count = 0;
 		
-		ifstream browser;
-		Image* display_img;
+		ifstream browser;											//input stream to read index file
+		Image* display_img;											//image for displaying
 		Text browser_error;
         
 private:
@@ -41,7 +37,6 @@ private:
         Button add_button;
 		Button close_add;
 		
-        
         In_box add_url_image_box;
         Button add_url_image_button;
         
@@ -52,25 +47,24 @@ private:
 		Button next_search;
 		Button previous_search;
 		 
-		
 		In_box name_box;
 		Button close_web_add;
 		In_box tag_box;
 		
-		Vector< Vector<string> > matrix;
-		Vector< Vector<string> > search_matrix;
-		Vector <string> v;
+		Vector< Vector<string> > matrix;									//matrix to hold information of all pictures in library
+		Vector< Vector<string> > search_matrix;								//matrix to hold information of searched pictures
+		Vector <string> v;												
         Vector <string> transfer;
 		vector <int> matches;
 		
-		Button next_button;
-		Button previous_button;
+		Button next_button;													//browse next 
+		Button previous_button;												//browse previous
 		Button done;
 		Button done_error;
 		  
-        void hide_files() { files_menu.hide();} 
+        void hide_files() { files_menu.hide();} 							//function to hide menu
         void files_pressed() { files_button.hide(); files_menu.show(); }
-        void img_browse() { files_menu.hide(); browse(); }
+        void img_browse() { files_menu.hide(); browse(); }						//function called when the browse menu button is pressed
 		void done_browse() { files_menu.show(); detach(*display_img); detach(browser_error); detach(done); detach(previous_button); detach(next_button); detach(*tags_display);}
 		void done_browse_error() { files_menu.show(); detach(done_error); detach(browser_error);}
 		
@@ -87,15 +81,14 @@ private:
 		void show_url_input() { attach(add_url_image_box); attach(add_url_image_button); attach(name_box); attach(close_web_add); attach(tag_box); attach(eg_tag); attach(eg_url); } 																				
 		void close_url_add() { files_button.show(); detach(add_url_image_box); detach(add_url_image_button); detach(name_box); detach(close_web_add); detach(tag_box); detach(Url_Error); detach(Tag_Error); detach(eg_tag); detach(eg_url); redraw();}
 		
-		
-	
-		static void cb_browse(Address, Address);
-        static void cb_add(Address, Address);                                         // callback for add_picture
+		//call backs for the buttons
+		static void cb_browse(Address, Address);								//callback for browse button
+        static void cb_add(Address, Address);                                     // callback for add_picture
         static void cb_add_close(Address, Address);
 		static void cb_search(Address, Address);                                 // callback for search_picture
         static void cb_files(Address, Address);
         static void cb_url_input(Address, Address);
-        static void cb_url_pressed(Address, Address);
+        static void cb_url_pressed(Address, Address);						
         static void cb_picture_search(Address, Address);
         static void cb_picture_add(Address, Address);
 		static void cb_close_url_add(Address, Address); 
@@ -113,7 +106,7 @@ private:
         void url_input() { hide_files(); show_url_input(); }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-	void next_url()
+	void next_url()													//function for downloading a picture from the web and storing it 
 	{
 		string img_name;
 		string url;
@@ -126,7 +119,7 @@ private:
 		
 		url=add_url_image_box.get_string();
 		img_name=name_box.get_string();
-		if(url != "" || img_name != "" )
+		if(url != "" || img_name != "" )												//check for input
 		{
 			bgning_string1=url.substr(0,4);
 			bgning_string2=url.substr(0,8);
@@ -143,10 +136,10 @@ private:
 			v.clear();
 			while(ss>>token)
 			{
-				if(token=="Family" || token=="Friends" || token=="Aggieland" || token=="Pets" || token=="Vacation")	
+				if(token=="Family" || token=="Friends" || token=="Aggieland" || token=="Pets" || token=="Vacation")	  //check that tags are correct
 				{v.push_back(token);}
 			}				
-			if(	bgning_string1=="http://" || bgning_string2=="https://" || bgning_string3=="www."&&	
+			if(	bgning_string1=="http://" || bgning_string2=="https://" || bgning_string3=="www."&&					//check for correct website input 
 			   (ending_string==".jpg" || 
 				ending_string==".gif" ||
 				ending_string==".JPG" ||
@@ -162,15 +155,15 @@ private:
 			{
 			if(ending_string2==".jpeg" || ending_string2==".JPEG")
 			{
-				final_url= "wget -O Images/"+img_name+ending_string2+" "+url;
+				final_url= "wget -O Images/"+img_name+ending_string2+" "+url; 							
 			}
 			else
 			{
-				final_url= "wget -O Images/"+img_name+ending_string+" "+url;
+				final_url= "wget -O Images/"+img_name+ending_string+" "+url;						//get image
 			}
 				system(final_url.c_str());
 			
-				input.open("Library.txt");
+				input.open("Library.txt");														//store image information in index file
 				string move;
 				transfer.clear();
 				while(getline(input, move))
@@ -214,10 +207,9 @@ private:
 			attach(Tag_Error);
 			redraw();
 		}
-		
 	}
 //-------------------------------------------------------------------------------------
-    void next_local()
+    void next_local()											//function for retrieving a picture from a local directory
 	{
 		string img_name;
 		string location;
@@ -227,7 +219,7 @@ private:
 
 		location=add_box.get_string();
 		img_name=name_box.get_string();
-		if(location != "" || img_name != "" )
+		if(location != "" || img_name != "" )					//check for input
 		{
 			ending_string=location.substr(location.size()-4,location.size()-1);
 			ending_string2=location.substr(location.size()-5,location.size()-1);
@@ -244,11 +236,11 @@ private:
 			for(int i = 0; i<v.size(); ++i)
 			{
 				check=false;
-				if(v[i]=="Family" || v[i]=="Friends" || v[i]=="Aggieland" || v[i]=="Pets" || v[i]=="Vacation")
+				if(v[i]=="Family" || v[i]=="Friends" || v[i]=="Aggieland" || v[i]=="Pets" || v[i]=="Vacation")					//check tags
 				{check=true;}
 			} 
 		
-			if((ending_string==".jpg" || 
+			if((ending_string==".jpg" || 									//check correct directory input
 				ending_string==".gif" ||
 				ending_string==".JPG" ||
 				ending_string==".GIF" ||
@@ -263,7 +255,7 @@ private:
 			{
 				final_location= "cp ~/"+location+" Images/"+img_name+ending_string;
 			
-				system(final_location.c_str());
+				system(final_location.c_str());							//copy file to the Image folder
 			
 				input.open("Library.txt");
 				string move;
@@ -280,7 +272,7 @@ private:
 				{
 					output<<transfer[i]<<endl;
 				}
-				output<<img_name+ending_string;			//Family, Friends, Aggieland, Pets, Vacation
+				output<<img_name+ending_string;			//store tags
 				for(int i=0; i<5; ++i)
 				{
 					if(i<v.size())
@@ -310,11 +302,9 @@ private:
 		}
 				
 	}
-  
-
 //------------------------------------------------------------------------------
 
-	void browse()
+	void browse()											//functions for browsing picture by tags
 	{
 		count = 0;
 		matrix.clear();
@@ -324,20 +314,20 @@ private:
 		string tag_show ="";
 		attach(done_error);
 		
-		getline(browser, test);
-		if(test == "")
+		getline(browser, test);								
+		if(test == "")										//is index file empty?
 		{
 			attach(browser_error);
 			redraw();
 		}
 		else
 		{
-			detach(done_error);
+			detach(done_error);									 
 			attach(done);
 			attach(previous_button);  
 			istringstream ss(test);
 			ss>>token>>tag1>>tag2>>tag3>>tag4>>tag5;
-			do
+			do															// get tags
 			{
 				vector <string> row;
 				row.push_back(token);
@@ -361,22 +351,26 @@ private:
 				{
 					row.push_back(tag5);
 				}
-				matrix.push_back(row);
+				matrix.push_back(row);											//place read index files into a matrix 
 			}while(browser>>token>>tag1>>tag2>>tag3>>tag4>>tag5);
 			browser.close();	
 			attach(next_button); 
 			if(matrix.size()<2)
 			{
-			next_button.hide();
+			next_button.hide();								
 			}
 			
 			previous_button.hide();
 			
-			display_img = new Image ( Point(180,100), "Images/"+matrix[0][0] );
-		
+			display_img = new Image ( Point(180,100), "Images/"+matrix[0][0] );			//display first image 
+			
+			if(display_img->get_height() <=401 || display_img->get_width() <=401)			//Check and resize
+			{
+				display_img->copy(400,400);
+			}
 			for(int i =1; i<matrix[0].size(); ++i)
 				{
-					tag_show = tag_show + matrix[count][i]+ ", ";
+					tag_show = tag_show + matrix[count][i]+ ", ";								//display tags
 				}
 			tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
 			tags_display->set_font_size(15);
@@ -387,12 +381,12 @@ private:
 		}
 	}	
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------	
-	void next_image()
+	void next_image()												//display next image 
 	{
 		string tag_show;
 		detach(*tags_display);
 		++count;
-		if(count >= matrix.size()-1)
+		if(count >= matrix.size()-1)								
 		{
 			next_button.hide();
 		}
@@ -401,18 +395,21 @@ private:
 			previous_button.show();
 		}
 		detach(*display_img);
-		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
+		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);			//iterate through matrix and display next image
+		if(display_img->get_height() <=401 || display_img->get_width() <=401)			//Check and resize
+		{
+			display_img->copy(400,400);
+		}
+		
 		attach(*display_img);
 		
 		for(int i =1; i<matrix[count].size(); ++i)
 			{
-				tag_show = tag_show + matrix[count][i]+ ", ";
+				tag_show = tag_show + matrix[count][i]+ ", ";							//display tags
 			}
 		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
 		tags_display->set_font_size(15);
-		attach(*tags_display);
-		
-		
+		attach(*tags_display);	
 		redraw();
 	}
 	
@@ -432,22 +429,25 @@ private:
 		}
 		detach(*display_img);
 		display_img = new Image ( Point(180,100), "Images/"+matrix[count][0]);
+		if(display_img->get_height() <=401 || display_img->get_width() <=401)					//Check and resize
+		{
+			display_img->copy(400,400);
+		}
 		attach(*display_img);
 		
 		for(int i = 1; i < matrix[count].size(); ++i)
 			{
-				tag_show = tag_show + matrix[count][i]+ ", ";
+				tag_show = tag_show + matrix[count][i]+ ", ";									//de-increment count adn display previous image 
 			}
 		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
 		tags_display->set_font_size(15);
 		attach(*tags_display);
-		
 		redraw();
 	}
 
 //-----------------------------------------------------------------------------------------------------	
 	
-	void search_tags()
+	void search_tags()																//search through images by searched tags
 	{
 		string search;
 		vector <string> tags_searched;
@@ -456,7 +456,7 @@ private:
 		string token = "";
 		matches.clear();
 		search_matrix.clear();
-		tags_searched.clear();
+		tags_searched.clear();														
 		string add = "";
 		count = 0;
 
@@ -493,17 +493,17 @@ private:
 							do
 							{	
 								vector <string> row;
-								row.push_back(file);
+								row.push_back(file);	
 								row.push_back(tag1);					
 								row.push_back(tag2);						
 								row.push_back(tag3);														
 								row.push_back(tag4);										
 								row.push_back(tag5);	
-								search_matrix.push_back(row);
+								search_matrix.push_back(row);											//put picture info into a matrix
 							}while(browser>>file>>tag1>>tag2>>tag3>>tag4>>tag5);
 							for(int ii = 0; ii<search_matrix.size(); ++ii)
 							{
-								for(int i = 0; i<tags_searched.size(); ++i)
+								for(int i = 0; i<tags_searched.size(); ++i)							
 								{
 									if(search_matrix[ii][1] == tags_searched[i] || 
 										search_matrix[ii][2] == tags_searched[i] ||
@@ -511,7 +511,7 @@ private:
 										search_matrix[ii][4] == tags_searched[i] ||
 										search_matrix[ii][5] == tags_searched[i] )
 									{
-										matches.push_back(ii);
+										matches.push_back(ii);							//searched for matches and place the location in a vector
 									}
 								}
 							}	
@@ -519,11 +519,15 @@ private:
 								attach(previous_search);
 								previous_search.hide();
 								attach(next_search);
-								if(search_matrix.size()<2)
+								if(matches.size()<=1)
 								{
 								next_search.hide();
 								}
-								display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[0]][0] );
+								display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[0]][0] );				//display first matched picture
+								if(display_img->get_height() <=401 || display_img->get_width() <=401)							//Check and resize
+									{
+										display_img->copy(400,400);
+									}
 								for(int i =1; i<search_matrix[matches[0]].size(); ++i)
 									{
 										if(search_matrix[matches[0]][i] != "x")
@@ -531,7 +535,7 @@ private:
 										tag_show = tag_show + search_matrix[matches[0]][i]+ ", ";
 										}
 									}
-								tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
+								tags_display = new Text ( Point(350,75), "Tags: "+tag_show);					//display tags
 								tags_display->set_font_size(15);
 								attach(*tags_display);
 							
@@ -552,10 +556,8 @@ private:
 				attach(search_error);
 			}	
 	}			
-
-	
 //-----------------------------------------------------------------------------------------------------
-void next_search_img()
+void next_search_img()						//display next image of searched tags
 	{
 		string tag_show;
 		detach(*tags_display);
@@ -569,13 +571,17 @@ void next_search_img()
 			previous_search.show();
 		}
 		detach(*display_img);
-		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);
+		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);					//increment count and iterate through matrix to display image
+		if(display_img->get_height() <=401 || display_img->get_width() <=401)							//Check and resize
+		{
+			display_img->copy(400,400);
+		}
 		attach(*display_img);
 		for(int i =1; i<search_matrix[count].size(); ++i)
 			{
 				if(search_matrix[matches[count]][i] != "x")
 				{
-				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";
+				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";							//display tags
 				}
 			}
 		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);
@@ -585,7 +591,7 @@ void next_search_img()
 	}	
 //-----------------------------------------------------------------------------------------------------	
 
-void previous_search_img()
+void previous_search_img()								//display previous image of searched tags
 {
 		string tag_show;
 		detach(*tags_display);
@@ -599,13 +605,17 @@ void previous_search_img()
 			previous_search.hide();
 		}
 		detach(*display_img);
-		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);
+		display_img = new Image ( Point(180,100), "Images/"+search_matrix[matches[count]][0]);				//de-increment count and display previous image
+		if(display_img->get_height() <=251 || display_img->get_width() <=251)							//Check and resize
+		{
+			display_img->copy(250,250);
+		}
 		attach(*display_img);
 		for(int i =1; i<search_matrix[count].size(); ++i)
 			{
 				if(search_matrix[matches[count]][i] != "x")
 				{
-				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";
+				tag_show = tag_show + search_matrix[matches[count]][i]+ ", ";						//display tags
 				}
 			}
 		tags_display = new Text ( Point(350,75), "Tags: "+tag_show);

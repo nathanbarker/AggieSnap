@@ -9,7 +9,7 @@ aggie_intro::aggie_intro(Point xy, int w, int h, const string& title )
 				
 				Start(Point(0,0),"Start.jpg"),
 				AggieSnap(Point(800,0),"Logo.jpg"),
-				Intro(Point(350,250),"This program is a photo library."),
+				Intro(Point(350,250),"This program is a photo library."),								//Buttons and text objects
                 Description(Point(275,270),"It's features include adding and searching pictures."),
                 Names(Point(0,590),"Designed by: Alex Benavides, Nathan Barker, Ezekiel Cabezas."),
 				
@@ -18,7 +18,7 @@ aggie_intro::aggie_intro(Point xy, int w, int h, const string& title )
 				{
 				
 				Intro.set_font_size(20);
-                Description.set_font_size(20);
+                Description.set_font_size(20);								//attaching and setting font sizes
                 Names.set_font_size(20);
 				attach(start_button);
 				attach(Start);

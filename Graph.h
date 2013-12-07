@@ -375,7 +375,11 @@ struct Image : Shape {
     Image(Point xy, string file_name, Suffix::Encoding e = Suffix::none);
     ~Image() { delete p; }
     void draw_lines() const;
-    void set_mask(Point xy, int ww, int hh) { w=ww; h=hh; cx=xy.x; cy=xy.y; }
+    void set_mask(Point xy, int ww, int hh) { w=ww; h=hh; cx=xy.x; cy=xy.y;}
+void copy(int x, int y)	{p = p->copy(x, y);}			//pointer to the copy function
+int get_width() { return p->w();}						//function to return width
+int get_height() {return p->h();}						//function to return height
+	
 private:
     int w,h;  // define "masking box" within image relative to position (cx,cy)
     int cx,cy; 
